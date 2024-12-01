@@ -7,3 +7,8 @@ services:
       - DB_PATH=/app/data/database.db
     env_file:
       - .env.docker-compose
+    volumes:
+      - kleinanzeigenadalert_data:/app/data
+
+volumes:
+  kleinanzeigenadalert_data:
