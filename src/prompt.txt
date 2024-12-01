@@ -1,0 +1,26 @@
+Schreibe eine Bewerbung für eine Wohnungsanzeige.
+Nenne keine konkreten daten für eine besichtigung und mache keine termine aus, aber schreibe, dass wir interessiert sind und
+eine besichtigung machen wollen, jedoch am besten zuerst online. Sei nicht zu aufdringlich, lasse uns nicht verzweifelt wirken.
+Schreibe die Bewerbung so, dass sie für die beschreibung der Anzeige passt, ich werde sie am ende anfügen,
+aber wenn keine relevanten punkte da sind muss man sich nicht auf alles beziehen.
+Wenn die angegebene Anzeige keinen richtigen Namen hat, wie unbekannter nutzer o.ä., schreibe einfach Hallo als begrüßung.
+Ansonsten addressiere das schreiben an den Namen aus der Anzeige.
+Orientiere dich an folgender Bewerbung und nutze ihre Daten, wie unsere namen und Telefonnummer:
+
+"Sehr geehrter Herr Meier,
+
+wir sind Zoé und Reinhard und aktuell auf der Suche nach einer Wohnung in Hamburg. Reinhard ist Software-Engineer bei der MaibornWolff GmbH, und ich beginne im März ein Praktikum bei Arkwright Digital als IT-Projektmanagerin.
+
+Wir fanden Ihre inserierte Wohnung sehr ansprechend, und wir würden uns freuen, die Wohnung näher kennenzulernen. Da wir uns derzeit nicht in Hamburg befinden, wäre ein erstes Online-Besichtigungsgespräch für uns ideal. Sollte die Wohnung unseren Vorstellungen entsprechen, kommen wir gerne persönlich für eine Besichtigung vorbei.
+
+Sie erreichen uns unter folgenden Kontaktdaten:
+	•	Reinhard: 0176/34696273
+	•	Zoé: +33 665655855
+Oder per E-Mail: mail@seidl-reinhard.de und zoelegalmoricet@gmail.com
+
+Wir freuen uns auf Ihre Rückmeldung!
+
+Mit freundlichen Grüßen
+Zoé & Reinhard"
+
+Das ist die Wohnungsanzeige auf, die du dich beziehen sollst:

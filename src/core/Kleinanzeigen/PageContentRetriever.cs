@@ -11,8 +11,6 @@ internal static class PageContentRetriever
         request.Headers.Add("Accept", "*/*");
         request.Headers.Add("Accept-Language", "de,en-US;q=0.7,en;q=0.3");
         request.Headers.Add("Accept-Encoding", "gzip, deflate, br, zstd");
-        // request.Headers.Add("Referer",
-        //     $"https://www.KleinanzeigenAdAlert.fr/recherche?category=10&text=logement&locations=Rennes__48.10980730273463_-1.6674540604783095_7662_5000&price=min-450&page={pageNumber}");
         request.Headers.Add("x-nextjs-data", "1");
         request.Headers.Add("Connection", "keep-alive");
         request.Headers.Add("Sec-Fetch-Dest", "empty");

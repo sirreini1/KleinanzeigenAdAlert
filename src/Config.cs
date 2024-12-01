@@ -7,4 +7,8 @@ public static class Config
     public static TimeSpan TimeBetweenCleanups = TimeSpan.FromDays(1);
     public static readonly string TelegramBotToken = Environment.GetEnvironmentVariable("TOKEN") ?? "someToken";
     public static readonly string OpenAIKey = Environment.GetEnvironmentVariable("OPENAI_KEY") ?? "";
+
+    public static readonly string PromptFilePath =
+        Environment.GetEnvironmentVariable("PROMPT_FILE_PATH") ??
+        @"prompt.txt";
 }
