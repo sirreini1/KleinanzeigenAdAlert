@@ -31,7 +31,7 @@ public class AdMonitoringService(
             }
 
             var timeBetweenSearches = Config.TimeBetweenSearches + TimeSpan.FromSeconds(randomTimeOffset);
-            logger.LogInformation("Waiting for {TimeBetweenSearches} seconds until new search is started",
+            logger.LogInformation("Next Search in: {TimeBetweenSearches}",
                 timeBetweenSearches);
             await Task.Delay(timeBetweenSearches);
         }
