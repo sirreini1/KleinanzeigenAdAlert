@@ -7,7 +7,10 @@ using Telegram.Bot.Types.Enums;
 
 namespace KleinanzeigenAdAlert.core.Telegram.Commands;
 
-public partial class ListCommand(TelegramBotClient bot, IFlatAdRepository flatAdRepository, ILogger<TelegramCommand> logger)
+public partial class ListCommand(
+    TelegramBotClient bot,
+    IFlatAdRepository flatAdRepository,
+    ILogger<TelegramCommand> logger)
     : TelegramCommand(bot, ListRegex(), logger)
 {
     private readonly TelegramBotClient _bot = bot;
@@ -25,7 +28,7 @@ public partial class ListCommand(TelegramBotClient bot, IFlatAdRepository flatAd
 
         if (uniqueSearchUrls.Count == 0) message = "You are not watching any search URLs";
 
-        await _bot.SendTextMessageAsync(msg.Chat, message,
+        await _bot.SendMessage(msg.Chat, message,
             linkPreviewOptions: new LinkPreviewOptions { IsDisabled = true });
     }
 

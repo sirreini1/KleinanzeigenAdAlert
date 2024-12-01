@@ -23,7 +23,7 @@ public abstract class TelegramCommand
                 catch (Exception e)
                 {
                     logger.LogError(e, "Error while handling command {CommandString}", commandRegex.ToString());
-                    await bot.SendTextMessageAsync(message.Chat, "An error occurred while processing the command");
+                    await bot.SendMessage(message.Chat, "An error occurred while processing the command");
                     throw;
                 }
             }

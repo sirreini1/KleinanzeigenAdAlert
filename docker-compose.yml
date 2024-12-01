@@ -1,8 +1,6 @@
 services:
   kleinanzeigenadalert:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: sirreini1/kleinanzeigenadalert:latest
     restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Production

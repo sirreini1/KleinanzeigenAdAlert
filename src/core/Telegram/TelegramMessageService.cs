@@ -21,7 +21,7 @@ public class TelegramMessageUserUserService(
     {
         var userChatIdPair = userPairChatIdRepository.FindChatByUserId(userId);
         if (userChatIdPair?.ChatId != null)
-            await bot.SendTextMessageAsync(userChatIdPair.ChatId, message);
+            await bot.SendMessage(userChatIdPair.ChatId, message);
         else
             logger.LogError("User not found, could not send message");
     }

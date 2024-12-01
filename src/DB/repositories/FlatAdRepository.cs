@@ -9,6 +9,7 @@ public interface IFlatAdRepository
     List<FlatAd> GetFlatAdsForUser(string telegramUser);
     void DeleteFlatAdsForUserAndUrl(string telegramUser, string searchUrl);
     List<TelegramUserSearchUrlPair> GetUniqueTelegramUserSearchUrlPairs();
+    void DeleteOldFlatAds(int maxAgeInDays = 7, int minNumberOfAds = 25);
     void DeleteFlatAd(string id);
     void DeleteAllFlatAds();
     void UpsertFlatAd(FlatAd flatAd, string telegramUser);
@@ -20,66 +21,86 @@ public interface IFlatAdRepository
 
 public class FlatAdRepository : IFlatAdRepository
 {
-    private readonly AppDbContext _dbContext1;
+    private readonly AppDbContext _dbContext;
 
     public FlatAdRepository(AppDbContext _dbContext)
     {
-        _dbContext1 = _dbContext;
+        this._dbContext = _dbContext;
     }
 
     public List<FlatAd> GetFlatAds()
     {
-        return _dbContext1.FlatAds.Select(e => FlatAdEntity.ToFlatAd(e)).ToList();
+        return _dbContext.FlatAds.Select(e => FlatAdEntity.ToFlatAd(e)).ToList();
     }
 
     public List<FlatAd> GetFlatAdsForUser(string telegramUser)
     {
-        return _dbContext1.FlatAds.Where(e => e.TelegramUser == telegramUser).Select(e => FlatAdEntity.ToFlatAd(e))
+        return GetFlatAdEntitiesForUser(telegramUser).Select(FlatAdEntity.ToFlatAd)
             .ToList();
+    }
+
+    private List<FlatAdEntity> GetFlatAdEntitiesForUser(string telegramUser)
+    {
+        return _dbContext.FlatAds.Where(e => e.TelegramUser == telegramUser).ToList();
     }
 
     public void DeleteFlatAdsForUserAndUrl(string telegramUser, string searchUrl)
     {
-        _dbContext1.FlatAds.RemoveRange(_dbContext1.FlatAds.Where(e =>
+        _dbContext.FlatAds.RemoveRange(_dbContext.FlatAds.Where(e =>
             e.TelegramUser == telegramUser && e.SearchUrl == searchUrl));
-        _dbContext1.SaveChanges();
+        _dbContext.SaveChanges();
     }
 
     public List<TelegramUserSearchUrlPair> GetUniqueTelegramUserSearchUrlPairs()
     {
-        return _dbContext1.FlatAds
+        return _dbContext.FlatAds
             .GroupBy(flatAdEntity => new { flatAdEntity.TelegramUser, flatAdEntity.SearchUrl })
             .Select(group => new TelegramUserSearchUrlPair(group.Key.TelegramUser, group.Key.SearchUrl))
             .ToList();
     }
 
+    public void DeleteOldFlatAds(int maxAgeInDays = 7, int minNumberOfAds = 25)
+    {
+        var allUserIdsWithAds = _dbContext.FlatAds.Select(ad => ad.TelegramUser).Distinct().ToList();
+        foreach (var userId in allUserIdsWithAds)
+        {
+            var userAds = GetFlatAdEntitiesForUser(userId);
+            if (userAds.Count > minNumberOfAds)
+            {
+                var oldAds = userAds.Where(e => e.PostedDate < DateTime.Now.AddDays(-maxAgeInDays));
+                _dbContext.FlatAds.RemoveRange(oldAds);
+            }
+        }
+
+        _dbContext.SaveChanges();
+    }
 
     public void DeleteFlatAd(string id)
     {
-        var flatAd = _dbContext1.FlatAds.Find(id);
+        var flatAd = _dbContext.FlatAds.Find(id);
         if (flatAd != null)
         {
-            _dbContext1.FlatAds.Remove(flatAd);
-            _dbContext1.SaveChanges();
+            _dbContext.FlatAds.Remove(flatAd);
+            _dbContext.SaveChanges();
         }
     }
 
     public void DeleteAllFlatAds()
     {
-        _dbContext1.FlatAds.RemoveRange(_dbContext1.FlatAds);
-        _dbContext1.SaveChanges();
+        _dbContext.FlatAds.RemoveRange(_dbContext.FlatAds);
+        _dbContext.SaveChanges();
     }
 
     public void UpsertFlatAd(FlatAd flatAd, string telegramUser)
     {
         var entity = FlatAdEntity.FromFlatAd(flatAd, telegramUser);
-        var existingAd = _dbContext1.FlatAds.Find(entity.Id);
+        var existingAd = _dbContext.FlatAds.Find(entity.Id);
         if (existingAd != null)
-            _dbContext1.Entry(existingAd).CurrentValues.SetValues(entity);
+            _dbContext.Entry(existingAd).CurrentValues.SetValues(entity);
         else
-            _dbContext1.FlatAds.Add(entity);
+            _dbContext.FlatAds.Add(entity);
 
-        _dbContext1.SaveChanges();
+        _dbContext.SaveChanges();
     }
 
     public List<FlatAd> CheckForNewAds(List<FlatAd> flatAds, string telegramUser)
@@ -88,7 +109,7 @@ public class FlatAdRepository : IFlatAdRepository
         foreach (var flatAd in flatAds)
         {
             var entity = FlatAdEntity.FromFlatAd(flatAd, telegramUser);
-            var existingAd = _dbContext1.FlatAds.Find(entity.Id);
+            var existingAd = _dbContext.FlatAds.Find(entity.Id);
             if (existingAd == null) newAds.Add(flatAd);
         }
 
@@ -97,12 +118,12 @@ public class FlatAdRepository : IFlatAdRepository
 
     public bool EntriesForURlAndUserExist(string searchUrl, string telegramUser)
     {
-        return _dbContext1.FlatAds.Any(e => e.SearchUrl == searchUrl && e.TelegramUser == telegramUser);
+        return _dbContext.FlatAds.Any(e => e.SearchUrl == searchUrl && e.TelegramUser == telegramUser);
     }
 
     public string GetStatisticPerUser(string telegramUser)
     {
-        var userAds = _dbContext1.FlatAds.Where(e => e.TelegramUser == telegramUser).ToList();
+        var userAds = _dbContext.FlatAds.Where(e => e.TelegramUser == telegramUser).ToList();
         var uniqueSearchUrls = userAds.Select(ad => ad.SearchUrl).Distinct().ToList();
         var message = $"You are watching {uniqueSearchUrls.Count} unique search URLs. With:\n\n";
 
@@ -121,13 +142,13 @@ public class FlatAdRepository : IFlatAdRepository
         foreach (var flatAd in flatAds)
         {
             var entity = FlatAdEntity.FromFlatAd(flatAd, telegramUser);
-            var existingAd = _dbContext1.FlatAds.Find(entity.Id);
+            var existingAd = _dbContext.FlatAds.Find(entity.Id);
             if (existingAd != null)
-                _dbContext1.Entry(existingAd).CurrentValues.SetValues(entity);
+                _dbContext.Entry(existingAd).CurrentValues.SetValues(entity);
             else
-                _dbContext1.FlatAds.Add(entity);
+                _dbContext.FlatAds.Add(entity);
         }
 
-        _dbContext1.SaveChanges();
+        _dbContext.SaveChanges();
     }
 }

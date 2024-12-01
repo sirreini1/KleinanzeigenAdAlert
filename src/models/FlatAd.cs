@@ -1,3 +1,5 @@
+using KleinanzeigenAdAlert.DB.entities;
+
 namespace KleinanzeigenAdAlert.models;
 
 public class FlatAd(

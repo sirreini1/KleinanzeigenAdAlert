@@ -22,7 +22,7 @@ public partial class StartCommand(
         var chatId = msg.Chat.Id.ToString();
         userPairChatIdRepository.SaveUserChatIdPair(new UserChatIdPair(telegramUser, chatId));
 
-        await _bot.SendTextMessageAsync(msg.Chat,
+        await _bot.SendMessage(msg.Chat,
             "Welcome to the KleinanzeigenAdAlertBot, start watching a search by typing /watch and the search url to watch. Just like this:\n /watch https://www.KleinanzeigenAdAlert.fr/recherche?.... \n type /help to see all commands",
             linkPreviewOptions: new LinkPreviewOptions { IsDisabled = true });
     }

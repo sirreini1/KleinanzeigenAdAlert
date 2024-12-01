@@ -19,8 +19,8 @@ public partial class StatisticsCommand(
     {
         var telegramUser = msg.From!.Id.ToString();
         var message = flatAdRepository.GetStatisticPerUser(telegramUser);
-        logger.LogInformation($"User {telegramUser} requested statistics");
-        await _bot.SendTextMessageAsync(msg.Chat, message,
+        logger.LogInformation("User {TelegramUser} requested statistics", telegramUser);
+        await _bot.SendMessage(msg.Chat, message,
             linkPreviewOptions: new LinkPreviewOptions { IsDisabled = true });
     }
 

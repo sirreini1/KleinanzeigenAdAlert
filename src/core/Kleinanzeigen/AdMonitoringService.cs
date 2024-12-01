@@ -1,6 +1,7 @@
 using KleinanzeigenAdAlert.core.Telegram;
 using KleinanzeigenAdAlert.DB.repositories;
 using KleinanzeigenAdAlert.models;
+using Microsoft.Extensions.Logging;
 
 namespace KleinanzeigenAdAlert.core.Kleinanzeigen;
 
@@ -11,15 +12,28 @@ public interface IAdMonitoringService
 
 public class AdMonitoringService(
     IFlatAdRepository flatAdRepository,
-    ITelegramMessageUserService telegramMessageUserService)
+    ITelegramMessageUserService telegramMessageUserService,
+    ILogger<AdMonitoringService> logger)
     : IAdMonitoringService
 {
+    private static readonly Random Random = new();
+
     public async Task CheckForNewAdsPeriodically()
     {
         while (true)
         {
+            logger.LogInformation("Checking for new ads");
             await CheckForNewAds();
-            await Task.Delay(Config.TimeBetweenSearches);
+            var randomTimeOffset = Random.Next() % 120 - 60;
+            if (randomTimeOffset < Config.TimeBetweenSearches.TotalSeconds)
+            {
+                randomTimeOffset = 0;
+            }
+
+            var timeBetweenSearches = Config.TimeBetweenSearches + TimeSpan.FromSeconds(randomTimeOffset);
+            logger.LogInformation("Waiting for {TimeBetweenSearches} seconds until new search is started",
+                timeBetweenSearches);
+            await Task.Delay(timeBetweenSearches);
         }
     }
 
@@ -48,6 +62,7 @@ public class AdMonitoringService(
         var message = $"""
                        description: {ad.Description}
                        price: {ad.Price}
+                       published time: {ad.PostedDate}
                        location: {ad.Location}
                        url: {ad.AdUrl}
                        """;

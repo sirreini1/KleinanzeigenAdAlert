@@ -7,7 +7,10 @@ using Telegram.Bot.Types.Enums;
 
 namespace KleinanzeigenAdAlert.core.Telegram.Commands;
 
-public partial class RemoveCommand(TelegramBotClient bot, IFlatAdRepository flatAdRepository, ILogger<TelegramCommand> logger)
+public partial class RemoveCommand(
+    TelegramBotClient bot,
+    IFlatAdRepository flatAdRepository,
+    ILogger<TelegramCommand> logger)
     : TelegramCommand(bot, RemoveRegex(), logger)
 {
     private readonly TelegramBotClient _bot = bot;
@@ -23,19 +26,19 @@ public partial class RemoveCommand(TelegramBotClient bot, IFlatAdRepository flat
 
             if (id < 0 || id >= uniqueSearchUrls.Count)
             {
-                await _bot.SendTextMessageAsync(msg.Chat, "Invalid id",
+                await _bot.SendMessage(msg.Chat, "Invalid id",
                     linkPreviewOptions: new LinkPreviewOptions { IsDisabled = true });
                 return;
             }
 
             var searchUrl = uniqueSearchUrls[id];
             flatAdRepository.DeleteFlatAdsForUserAndUrl(telegramUser, searchUrl);
-            await _bot.SendTextMessageAsync(msg.Chat, $"Removed search url with id: {id}",
+            await _bot.SendMessage(msg.Chat, $"Removed search url with id: {id}",
                 linkPreviewOptions: new LinkPreviewOptions { IsDisabled = true });
         }
         catch (Exception e)
         {
-            await _bot.SendTextMessageAsync(msg.Chat, "Invalid id",
+            await _bot.SendMessage(msg.Chat, "Invalid id",
                 linkPreviewOptions: new LinkPreviewOptions { IsDisabled = true });
             Console.WriteLine("Error removing search url: " + e.Message);
             throw;
