@@ -1,6 +1,4 @@
-using KleinanzeigenAdAlert.core.Telegram;
 using KleinanzeigenAdAlert.DB.repositories;
-using KleinanzeigenAdAlert.models;
 using Microsoft.Extensions.Logging;
 
 namespace KleinanzeigenAdAlert.core.Kleinanzeigen;

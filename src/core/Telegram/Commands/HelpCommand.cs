@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace KleinanzeigenAdAlert.core.Telegram.Commands;
 
@@ -13,7 +14,7 @@ public partial class HelpCommand(TelegramBotClient bot, ILogger<TelegramCommand>
 
     protected override async Task HandleCommand(Message msg, UpdateType updateType)
     {
-        await _bot.SendTextMessageAsync(msg.Chat,
+        await _bot.SendMessage(msg.Chat,
             "Commands:\n /start - Start the bot\n /watch - Watch a search url\n /list - List all watched search urls\n /remove - Remove a search url",
             linkPreviewOptions: new LinkPreviewOptions { IsDisabled = true });
     }

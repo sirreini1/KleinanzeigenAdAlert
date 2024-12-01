@@ -65,6 +65,8 @@ public class AdMonitoringService(
                        published time: {ad.PostedDate}
                        location: {ad.Location}
                        url: {ad.AdUrl}
+                       generate application text by typing:
+                       /genApplication {ad.AdUrl}
                        """;
 
         return message;
