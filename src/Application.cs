@@ -1,4 +1,5 @@
 using KleinanzeigenAdAlert.core.Kleinanzeigen;
+using KleinanzeigenAdAlert.core.Kleinanzeigen.services;
 
 namespace KleinanzeigenAdAlert;
 

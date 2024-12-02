@@ -1,7 +1,7 @@
 using KleinanzeigenAdAlert.DB.repositories;
 using Microsoft.Extensions.Logging;
 
-namespace KleinanzeigenAdAlert.core.Kleinanzeigen;
+namespace KleinanzeigenAdAlert.core.Kleinanzeigen.services;
 
 public interface IAdCleanupService
 {

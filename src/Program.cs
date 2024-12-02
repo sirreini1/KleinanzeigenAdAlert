@@ -1,5 +1,6 @@
 ﻿using KleinanzeigenAdAlert;
 using KleinanzeigenAdAlert.core.Kleinanzeigen;
+using KleinanzeigenAdAlert.core.Kleinanzeigen.services;
 using KleinanzeigenAdAlert.core.Telegram;
 using KleinanzeigenAdAlert.DB;
 using KleinanzeigenAdAlert.DB.repositories;

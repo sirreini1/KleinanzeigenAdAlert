@@ -3,7 +3,7 @@ using KleinanzeigenAdAlert.DB.repositories;
 using KleinanzeigenAdAlert.models;
 using Microsoft.Extensions.Logging;
 
-namespace KleinanzeigenAdAlert.core.Kleinanzeigen;
+namespace KleinanzeigenAdAlert.core.Kleinanzeigen.services;
 
 public interface IAdMonitoringService
 {
@@ -45,7 +45,9 @@ public class AdMonitoringService(
         {
             Console.WriteLine("Checking for new ads for user: " + pair.TelegramUser);
             var flatAds = await AdExtractor.GetAdsFromUrl(pair.SearchUrl);
-            var newAds = flatAdRepository.CheckForNewAds(flatAds, pair.TelegramUser);
+            var relevantAds = flatAds.Where(ad => ad.PostedDate > DateTime.Now - Config.MaxAgeOfAdToConsider).ToList();
+
+            var newAds = flatAdRepository.CheckForNewAds(relevantAds, pair.TelegramUser);
             if (newAds.Count != 0)
             {
                 Console.WriteLine("New ads found for user: " + pair.TelegramUser);
